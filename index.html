@@ -1,1 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cigarette Burn</title>
 
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   CIGARETTE
+   ========================================================= */
+
+.cigarette {
+    position: absolute;
+
+    width: 293px;
+    height: 42px;
+
+    left: 50%;
+    top: 42%;
+
+    transform: translate(-50%, -50%);
+
+    pointer-events: auto;
+}
+
+
+/* =========================================================
+   WHITE PAPER
+   ========================================================= */
+
+.paper {
+    position: absolute;
+
+    left: 68px;
+    right: 0;
+    top: 0;
+
+    width: 225px;
+    height: 42px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #f4f4f4 0%,
+            #ffffff 35%,
+            #eeeeee 100%
+        );
+
+    border-radius: 0 2px 2px 0;
+
+    overflow: hidden;
+}
+
+.paper::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            to right,
+            rgba(0,0,0,0.018) 0px,
+            rgba(0,0,0,0.018) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   FILTER
+   ========================================================= */
+
+.filter {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 68px;
+    height: 42px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #d39a57 0%,
+            #c88947 45%,
+            #b9783a 100%
+        );
+
+    border-radius: 3px 0 0 3px;
+}
+
+.filter::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 5px,
+            rgba(100, 55, 20, 0.18) 5px,
+            rgba(100, 55, 20, 0.18) 6px
+        );
+
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   CHARRED EDGE
+   ========================================================= */
+
+.char {
+    position: absolute;
+
+    top: -1px;
+    left: auto;
+    right: -1px;
+
+    width: 7px;
+    height: 44px;
+
+    background:
+        linear-gradient(
+            to right,
+            #111111,
+            #333333,
+            #151515
+        );
+
+    border-radius: 2px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
+
+/* =========================================================
+   EMBER
+   ========================================================= */
+
+.ember {
+    position: absolute;
+
+    left: auto;
+    right: -7px;
+    top: 4px;
+
+    width: 13px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            #fff6b0 0%,
+            #ffb000 25%,
+            #ff4a00 55%,
+            #8f1600 78%,
+            transparent 100%
+        );
+
+    box-shadow:
+        0 0 5px rgba(255, 80, 0, 0.95),
+        0 0 12px rgba(255, 70, 0, 0.65),
+        0 0 20px rgba(255, 30, 0, 0.35);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 6;
+
+    animation: emberPulse 0.7s infinite alternate;
+}
+
+@keyframes emberPulse {
+
+    from {
+        transform: scale(0.94);
+        opacity: 0.88;
+    }
+
+    to {
+        transform: scale(1.06);
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   SMOKE
+   ========================================================= */
+
+.smoke {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition: opacity 0.25s ease;
+
+    z-index: 10;
+}
+
+.scene.lit .smoke {
+    opacity: 1;
+}
+
+.smoke-particle {
+    position: absolute;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: rgba(190, 190, 190, 0.30);
+
+    filter: blur(2px);
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   HOLD BUTTON
+   ========================================================= */
+
+.hold-button {
+    position: absolute;
+
+    left: 50%;
+    bottom: 105px;
+
+    transform: translateX(-50%);
+
+    width: 78px;
+    height: 78px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #d40000;
+
+    cursor: pointer;
+
+    touch-action: none;
+
+    user-select: none;
+    -webkit-user-select: none;
+
+    transition:
+        transform 0.08s ease,
+        background 0.12s ease;
+}
+
+.hold-button:active,
+.hold-button.pressed {
+
+    transform:
+        translateX(-50%)
+        scale(0.93);
+
+    background: #a80000;
+}
+
+
+/* =========================================================
+   RESET BUTTON
+   ========================================================= */
+
+.reset-button {
+    position: absolute;
+
+    left: 50%;
+    bottom: 38px;
+
+    transform: translateX(-50%);
+
+    width: 78px;
+    height: 38px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #242424;
+
+    color: #aaa;
+
+    font-size: 13px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    touch-action: none;
+
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.reset-button:active {
+    background: #333;
+}
+
+
+/* =========================================================
+   ASH
+   ========================================================= */
+
+.ash {
+    position: absolute;
+
+    width: 4px;
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: #777;
+
+    pointer-events: none;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="scene" id="scene">
+
+    <div class="cigarette" id="cigarette">
+
+        <div class="paper" id="paper"></div>
+
+        <div class="filter"></div>
+
+        <div class="char" id="char"></div>
+
+        <div class="ember" id="ember"></div>
+
+        <div class="smoke" id="smoke"></div>
+
+    </div>
+
+
+    <button
+        class="hold-button"
+        id="holdButton">
+    </button>
+
+
+    <button
+        class="reset-button"
+        id="resetButton">
+        RESET
+    </button>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+/*
+    The cigarette now burns RIGHT → LEFT.
+
+    Filter:
+    68px
+
+    White paper:
+    225px
+*/
+
+const START = 225;
+
+const BUTT = 68;
+
+const USABLE_LENGTH =
+    START - BUTT;
+
+
+/*
+    Three large holds.
+*/
+
+const BURN_PER_HOLD =
+    USABLE_LENGTH / 3;
+
+
+/*
+    Burn speed.
+*/
+
+const BURN_SPEED = 15.2;
+
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const scene =
+    document.getElementById("scene");
+
+const cigarette =
+    document.getElementById("cigarette");
+
+const paper =
+    document.getElementById("paper");
+
+const char =
+    document.getElementById("char");
+
+const ember =
+    document.getElementById("ember");
+
+const smoke =
+    document.getElementById("smoke");
+
+const holdButton =
+    document.getElementById("holdButton");
+
+const resetButton =
+    document.getElementById("resetButton");
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let remaining = START;
+
+let holding = false;
+
+let holdCount = 0;
+
+let holdStartRemaining = START;
+
+let holdTargetRemaining = START;
+
+let lastTime = 0;
+
+let smokeTimer = 0;
+
+
+/* =========================================================
+   GET BURN POSITION
+   ========================================================= */
+
+/*
+    The burn begins at the RIGHT side.
+
+    burnX:
+
+    0 = original right edge
+
+    As it burns, the tip moves LEFT.
+*/
+
+function getBurnX() {
+
+    return BUTT + remaining;
+}
+
+
+/* =========================================================
+   UPDATE CIGARETTE
+   ========================================================= */
+
+function updateCigarette() {
+
+    /*
+        The filter stays fixed on the LEFT.
+
+        The paper shrinks from the RIGHT.
+    */
+
+    paper.style.width =
+        remaining + "px";
+
+
+    const burnX =
+        getBurnX();
+
+
+    /*
+        Char follows the burning edge.
+    */
+
+    char.style.left =
+        (burnX - 1) + "px";
+
+    char.style.right =
+        "auto";
+
+
+    /*
+        Ember follows the burning edge.
+    */
+
+    ember.style.left =
+        (burnX - 7) + "px";
+
+    ember.style.right =
+        "auto";
+}
+
+
+/* =========================================================
+   LIGHT CIGARETTE
+   ========================================================= */
+
+function lightCigarette() {
+
+    scene.classList.add("lit");
+
+    ember.style.opacity = "1";
+
+    char.style.opacity = "1";
+}
+
+
+/* =========================================================
+   SPAWN SMOKE
+   ========================================================= */
+
+function spawnSmoke() {
+
+    if (
+        !scene.classList.contains("lit")
+    ) {
+        return;
+    }
+
+
+    /*
+        CURRENT burning tip.
+
+        This is important because the smoke
+        needs to follow the burn as it moves
+        from RIGHT → LEFT.
+    */
+
+    const burnX =
+        getBurnX();
+
+
+    const p =
+        document.createElement("div");
+
+    p.className =
+        "smoke-particle";
+
+
+    /*
+        Tiny horizontal variation.
+    */
+
+    const x =
+        burnX +
+        (Math.random() * 8 - 4);
+
+
+    /*
+        Start directly above the ember.
+    */
+
+    const y =
+        -4 +
+        (Math.random() * 5);
+
+
+    p.style.left =
+        x + "px";
+
+    p.style.top =
+        y + "px";
+
+
+    /*
+        Random smoke size.
+    */
+
+    const size =
+        5 +
+        Math.random() * 7;
+
+    p.style.width =
+        size + "px";
+
+    p.style.height =
+        size + "px";
+
+
+    /*
+        Movement values.
+    */
+
+    p._x = x;
+
+    p._y = y;
+
+    p._vx =
+        (Math.random() - 0.5) * 8;
+
+    p._vy =
+        -(14 + Math.random() * 18);
+
+    p._life = 0;
+
+    p._maxLife =
+        1.5 +
+        Math.random() * 1.3;
+
+    p._wave =
+        Math.random() *
+        Math.PI * 2;
+
+
+    smoke.appendChild(p);
+}
+
+
+/* =========================================================
+   UPDATE SMOKE
+   ========================================================= */
+
+function updateSmoke(dt) {
+
+    /*
+        Keep generating smoke while lit.
+    */
+
+    if (
+        scene.classList.contains("lit") &&
+        remaining > BUTT
+    ) {
+
+        smokeTimer += dt;
+
+
+        while (
+            smokeTimer >= 0.075
+        ) {
+
+            smokeTimer -= 0.075;
+
+            spawnSmoke();
+        }
+    }
+
+
+    /*
+        Animate existing particles.
+    */
+
+    const particles =
+        smoke.children;
+
+
+    for (
+        let i = particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const p =
+            particles[i];
+
+
+        p._life += dt;
+
+
+        const progress =
+            p._life /
+            p._maxLife;
+
+
+        if (
+            progress >= 1
+        ) {
+
+            p.remove();
+
+            continue;
+        }
+
+
+        /*
+            Gentle sideways movement.
+        */
+
+        p._wave +=
+            dt * 2;
+
+
+        p._x +=
+            p._vx * dt +
+            Math.sin(p._wave) *
+            dt * 2;
+
+
+        p._y +=
+            p._vy * dt;
+
+
+        /*
+            Smoke slows as it rises.
+        */
+
+        p._vy *=
+            Math.pow(
+                0.985,
+                dt * 60
+            );
+
+
+        p.style.left =
+            p._x + "px";
+
+        p.style.top =
+            p._y + "px";
+
+
+        /*
+            Smoke expands.
+        */
+
+        const scale =
+            0.8 +
+            progress * 1.8;
+
+
+        p.style.transform =
+            "scale(" +
+            scale +
+            ")";
+
+
+        /*
+            Fade away.
+        */
+
+        p.style.opacity =
+            String(
+                0.28 *
+                (1 - progress)
+            );
+    }
+}
+
+
+/* =========================================================
+   SPAWN ASH
+   ========================================================= */
+
+function spawnAsh() {
+
+    const burnX =
+        getBurnX();
+
+
+    const ash =
+        document.createElement("div");
+
+    ash.className =
+        "ash";
+
+
+    ash.style.left =
+        (
+            burnX +
+            (Math.random() * 5 - 2.5)
+        ) + "px";
+
+
+    ash.style.top =
+        (
+            38 +
+            Math.random() * 5
+        ) + "px";
+
+
+    scene.appendChild(ash);
+
+
+    let x =
+        parseFloat(
+            ash.style.left
+        );
+
+    let y =
+        parseFloat(
+            ash.style.top
+        );
+
+    let life = 0;
+
+
+    const vx =
+        (Math.random() - 0.5) * 12;
+
+    const vy =
+        8 +
+        Math.random() * 10;
+
+
+    function animateAsh(time) {
+
+        const dt =
+            Math.min(
+                0.033,
+                (
+                    time -
+                    (
+                        animateAsh.last ||
+                        time
+                    )
+                ) / 1000
+            );
+
+
+        animateAsh.last =
+            time;
+
+
+        life += dt;
+
+
+        if (
+            life > 0.7
+        ) {
+
+            ash.remove();
+
+            return;
+        }
+
+
+        x +=
+            vx * dt;
+
+        y +=
+            vy * dt;
+
+
+        ash.style.left =
+            x + "px";
+
+        ash.style.top =
+            y + "px";
+
+
+        ash.style.opacity =
+            String(
+                1 -
+                life / 0.7
+            );
+
+
+        requestAnimationFrame(
+            animateAsh
+        );
+    }
+
+
+    requestAnimationFrame(
+        animateAsh
+    );
+}
+
+
+/* =========================================================
+   START HOLDING
+   ========================================================= */
+
+function startHolding() {
+
+    if (holding) {
+        return;
+    }
+
+
+    /*
+        Don't burn once finished.
+    */
+
+    if (
+        remaining <= BUTT
+    ) {
+        return;
+    }
+
+
+    lightCigarette();
+
+
+    holding = true;
+
+
+    holdButton.classList.add(
+        "pressed"
+    );
+
+
+    holdStartRemaining =
+        remaining;
+
+
+    /*
+        One press = one stage.
+    */
+
+    holdTargetRemaining =
+        Math.max(
+            BUTT,
+            holdStartRemaining -
+            BURN_PER_HOLD
+        );
+}
+
+
+/* =========================================================
+   STOP HOLDING
+   ========================================================= */
+
+function stopHolding() {
+
+    if (!holding) {
+        return;
+    }
+
+
+    holding = false;
+
+
+    holdButton.classList.remove(
+        "pressed"
+    );
+
+
+    /*
+        IMPORTANT:
+
+        We deliberately DON'T turn
+        the cigarette off.
+
+        It stays lit after release.
+    */
+
+    if (
+        remaining <=
+        holdTargetRemaining +
+        0.001
+    ) {
+
+        completeBigHold();
+    }
+}
+
+
+/* =========================================================
+   COMPLETE HOLD
+   ========================================================= */
+
+function completeBigHold() {
+
+    holding = false;
+
+
+    holdButton.classList.remove(
+        "pressed"
+    );
+
+
+    remaining =
+        holdTargetRemaining;
+
+
+    updateCigarette();
+
+
+    holdCount++;
+
+
+    /*
+        Stay lit.
+    */
+
+    scene.classList.add(
+        "lit"
+    );
+
+
+    ember.style.opacity = "1";
+
+    char.style.opacity = "1";
+
+
+    /*
+        Small ash effect.
+    */
+
+    spawnAsh();
+
+
+    /*
+        Third stage = finished.
+    */
+
+    if (
+        holdCount >= 3
+    ) {
+
+        remaining = BUTT;
+
+        updateCigarette();
+
+        finishCigarette();
+
+        return;
+    }
+
+
+    /*
+        Prepare next stage.
+    */
+
+    holdStartRemaining =
+        remaining;
+
+
+    holdTargetRemaining =
+        Math.max(
+            BUTT,
+            remaining -
+            BURN_PER_HOLD
+        );
+}
+
+
+/* =========================================================
+   BURN
+   ========================================================= */
+
+function burn(dt) {
+
+    if (!holding) {
+        return;
+    }
+
+
+    remaining -=
+        BURN_SPEED * dt;
+
+
+    /*
+        Don't burn past this stage.
+    */
+
+    if (
+        remaining <=
+        holdTargetRemaining
+    ) {
+
+        remaining =
+            holdTargetRemaining;
+
+
+        updateCigarette();
+
+
+        completeBigHold();
+
+        return;
+    }
+
+
+    updateCigarette();
+}
+
+
+/* =========================================================
+   FINISH CIGARETTE
+   ========================================================= */
+
+function finishCigarette() {
+
+    holding = false;
+
+
+    holdButton.classList.remove(
+        "pressed"
+    );
+
+
+    /*
+        Keep the ember lit for
+        a moment after finishing.
+    */
+
+    scene.classList.add(
+        "lit"
+    );
+
+
+    ember.style.opacity = "1";
+
+    char.style.opacity = "1";
+
+
+    /*
+        Auto reset.
+    */
+
+    setTimeout(() => {
+
+        resetCigarette();
+
+    }, 1000);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+function resetCigarette() {
+
+    holding = false;
+
+    holdCount = 0;
+
+    remaining = START;
+
+    holdStartRemaining = START;
+
+    holdTargetRemaining = START;
+
+    smokeTimer = 0;
+
+
+    holdButton.classList.remove(
+        "pressed"
+    );
+
+
+    scene.classList.remove(
+        "lit"
+    );
+
+
+    ember.style.opacity = "0";
+
+    char.style.opacity = "0";
+
+
+    /*
+        Remove smoke.
+    */
+
+    while (
+        smoke.firstChild
+    ) {
+
+        smoke.firstChild.remove();
+    }
+
+
+    /*
+        Remove ash.
+    */
+
+    document
+        .querySelectorAll(".ash")
+        .forEach(
+            ash => ash.remove()
+        );
+
+
+    updateCigarette();
+}
+
+
+/* =========================================================
+   MAIN ANIMATION LOOP
+   ========================================================= */
+
+function animationLoop(time) {
+
+    if (!lastTime) {
+        lastTime = time;
+    }
+
+
+    const dt =
+        Math.min(
+            0.05,
+            (
+                time -
+                lastTime
+            ) / 1000
+        );
+
+
+    lastTime = time;
+
+
+    burn(dt);
+
+    updateSmoke(dt);
+
+
+    requestAnimationFrame(
+        animationLoop
+    );
+}
+
+
+/* =========================================================
+   POINTER EVENTS
+   ========================================================= */
+
+function pointerDown(e) {
+
+    e.preventDefault();
+
+
+    try {
+
+        e.currentTarget
+            .setPointerCapture(
+                e.pointerId
+            );
+
+    } catch (err) {}
+
+
+    startHolding();
+}
+
+
+function pointerUp(e) {
+
+    e.preventDefault();
+
+    stopHolding();
+}
+
+
+function pointerCancel(e) {
+
+    e.preventDefault();
+
+    stopHolding();
+}
+
+
+/* =========================================================
+   HOLD BUTTON
+   ========================================================= */
+
+holdButton.addEventListener(
+    "pointerdown",
+    pointerDown
+);
+
+holdButton.addEventListener(
+    "pointerup",
+    pointerUp
+);
+
+holdButton.addEventListener(
+    "pointercancel",
+    pointerCancel
+);
+
+
+/* =========================================================
+   CIGARETTE
+   ========================================================= */
+
+cigarette.addEventListener(
+    "pointerdown",
+    pointerDown
+);
+
+cigarette.addEventListener(
+    "pointerup",
+    pointerUp
+);
+
+cigarette.addEventListener(
+    "pointercancel",
+    pointerCancel
+);
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+resetButton.addEventListener(
+    "pointerdown",
+    function(e) {
+
+        e.preventDefault();
+
+        resetCigarette();
+    }
+);
+
+
+/* =========================================================
+   MOBILE / SAFARI PROTECTION
+   ========================================================= */
+
+document.addEventListener(
+    "contextmenu",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "selectstart",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "dragstart",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "gesturestart",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "gesturechange",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+document.addEventListener(
+    "gestureend",
+    function(e) {
+        e.preventDefault();
+    }
+);
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+updateCigarette();
+
+requestAnimationFrame(
+    animationLoop
+);
+
+</script>
+
+</body>
+</html>
